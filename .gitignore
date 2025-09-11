@@ -1,0 +1,64 @@
+# 依赖目录
+/vendor/
+
+# 环境配置文件
+.env
+.env.local
+.env.production
+.env.testing
+
+# 存储目录
+/storage/logs/*.log
+/storage/cache/*
+/storage/sessions/*
+/storage/framework/*
+/storage/uploads/*
+
+# 配置文件
+/config/config.php
+/config/installed.lock
+
+# 临时安装脚本（已清理）
+/check_config.php
+/check_directory.php
+/fix_database.php
+/install_dependencies.php
+/quick_install.php
+
+# 测试覆盖率
+/coverage/
+/coverage.txt
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+
+# 日志文件
+*.log
+
+# 备份文件
+*.bak
+*.backup
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+
+# 数据库文件
+*.sqlite
+*.db
+
+# 缓存文件
+*.cache

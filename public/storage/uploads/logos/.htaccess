@@ -1,0 +1,32 @@
+# 允许访问图片文件
+<Files "*.jpg">
+    Require all granted
+</Files>
+<Files "*.jpeg">
+    Require all granted
+</Files>
+<Files "*.png">
+    Require all granted
+</Files>
+<Files "*.gif">
+    Require all granted
+</Files>
+<Files "*.svg">
+    Require all granted
+</Files>
+
+# 拒绝访问其他文件类型
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|svg)$).*$">
+    Require all denied
+</FilesMatch>
+
+# 禁止目录浏览
+Options -Indexes
+
+# 设置正确的MIME类型
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/svg+xml .svg
+</IfModule>

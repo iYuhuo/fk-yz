@@ -1,0 +1,69 @@
+# Nginx 配置示例 - 网络验证系统
+# 将此配置添加到您的Nginx虚拟主机配置中
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name your-domain.com;
+    
+    # 项目根目录
+    root /path/to/your/project;
+    
+    # 默认文档目录指向public
+    location / {
+        try_files $uri $uri/ @app;
+    }
+    
+    # 处理应用路由
+    location @app {
+        rewrite ^(.+)$ /public/index.php?$query_string last;
+    }
+    
+    # 允许访问install.php（仅在安装阶段）
+    location = /install.php {
+        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+    
+    # 处理public目录中的PHP文件
+    location ~ ^/public/.*\.php$ {
+        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+    
+    # 拒绝访问敏感目录
+    location ~ ^/(config|src|storage|vendor|install_steps|database)/ {
+        deny all;
+        return 404;
+    }
+    
+    # 拒绝访问敏感文件
+    location ~ \.(env|lock|log|sql|md)$ {
+        deny all;
+        return 404;
+    }
+    
+    # 拒绝访问composer和artisan文件
+    location ~ ^/(composer\.(json|lock)|artisan)$ {
+        deny all;
+        return 404;
+    }
+    
+    # 处理静态资源
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    # 安全头
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    
+    # 隐藏Nginx版本
+    server_tokens off;
+}
